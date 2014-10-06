@@ -13,7 +13,8 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.forms import ModelMultipleChoiceField
 from xadmin.layout import Fieldset, Main, Side, Row, FormHelper
 from xadmin.sites import site
-from xadmin.util import unquote, User
+from xadmin.util import unquote
+from users.models import User
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, ModelAdminView, CommAdminView, csrf_protect_m
 
 
