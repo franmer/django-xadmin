@@ -26,6 +26,19 @@ ACTION_NAME = {
     'view': _('Can view %s'),
 }
 
+class MyUserCreationForm(UserCreationForm):
+    def clean_username(self):
+        # Since User.username is unique, this check is redundant,
+        # but it sets a nicer error message than the ORM. See #13147.
+        username = self.cleaned_data["username"]
+        try:
+            User._default_manager.get(username=username)
+        except User.DoesNotExist:
+            return username
+        raise forms.ValidationError(self.error_messages['duplicate_username'])
+
+    class Meta(UserCreationForm.Meta):
+        model = User
 
 def get_permission_name(p):
     action = p.codename.split('_')[0]
@@ -72,7 +85,7 @@ class UserAdmin(object):
 
     def get_model_form(self, **kwargs):
         if self.org_obj is None:
-            self.form = UserCreationForm
+            self.form = MyUserCreationForm #sgiso demor change
         else:
             self.form = UserChangeForm
         return super(UserAdmin, self).get_model_form(**kwargs)
