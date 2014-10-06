@@ -1,0 +1,4 @@
+git add -u :/
+git add .
+git commit -m"Non critical change, adaptative-iterative"
+git push origin master
