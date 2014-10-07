@@ -1,4 +1,5 @@
 git add -u :/
 git add .
 git commit -m"Non critical change, adaptative-iterative"
+echo "remember franmer C@______s7"
 git push origin master
