@@ -218,13 +218,14 @@ site.register_plugin(ModelPermissionPlugin, ModelAdminView)
 
 class ProyectoEmpresaUsuarioModelPermissionPlugin(BaseAdminPlugin):
 
-    user_can_access_proyect_objects_only = False
-    user_owned_objects_field = 'user'
+    user_can_access_proyecto_empresa_user_objects_only = False
+    #user_owned_objects_field = 'user'
 
     def queryset(self, qs):
-        if self.user_can_access_owned_objects_only and \
+        if self.user_can_access_proyecto_empresa_user_objects_only and \
                 not self.user.is_superuser:
-            filters = {self.user_owned_objects_field: self.user}
+            #filters = {self.user_owned_objects_field: self.user}
+            filters = {'user': self.user, 'empresa': self.user.cliente.proyecto.empresa_erp, 'proyecto': self.user.cliente.proyecto}
             qs = qs.filter(**filters)
         return qs
 
