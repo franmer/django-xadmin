@@ -236,7 +236,7 @@ class ProyectoEmpresaUsuarioModelPermissionPlugin(BaseAdminPlugin):
             filters['user_pk'] = self.user
             filters['empresa_pk'] = self.user.cliente.proyecto.empresa_erp
             filters['proyecto_pk'] = self.user.cliente.proyecto
-            qs = qs.filter(**filters)
+            qs = 0#qs.filter(**filters)
         return qs
 
 site.register_plugin(ProyectoEmpresaUsuarioModelPermissionPlugin, ModelAdminView)
