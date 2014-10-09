@@ -153,6 +153,46 @@ class UserFieldPlugin(BaseAdminPlugin):
 site.register_plugin(UserFieldPlugin, ModelFormAdminView)
 
 
+class ProyectoFieldPlugin(BaseAdminPlugin):
+
+    proyecto_fields = []
+
+    def get_field_attrs(self, __, db_field, **kwargs):
+        if self.proyecto_fields and db_field.name in self.proyecto_fields:
+            return {'widget': forms.HiddenInput}
+        return __()
+
+    def get_form_datas(self, datas):
+        if self.proyecto_fields and 'data' in datas:
+            if hasattr(datas['data'],'_mutable') and not datas['data']._mutable:
+                datas['data'] = datas['data'].copy()
+            for f in self.proyecto_fields:
+                datas['data'][f] = self.user.cliente.proyecto.id
+        return datas
+
+site.register_plugin(ProyectoFieldPlugin, ModelFormAdminView)
+
+
+class EmpresaFieldPlugin(BaseAdminPlugin):
+
+    empresa_fields = []
+
+    def get_field_attrs(self, __, db_field, **kwargs):
+        if self.empresa_fields and db_field.name in self.empresa_fields:
+            return {'widget': forms.HiddenInput}
+        return __()
+
+    def get_form_datas(self, datas):
+        if self.empresa_fields and 'data' in datas:
+            if hasattr(datas['data'],'_mutable') and not datas['data']._mutable:
+                datas['data'] = datas['data'].copy()
+            for f in self.empresa_fields:
+                datas['data'][f] = self.user.cliente.proyecto.empresa_erp.id  #Mejorar este acceso desde la clase padre si se puede.
+        return datas
+
+site.register_plugin(EmpresaFieldPlugin, ModelFormAdminView)
+
+
 class ModelPermissionPlugin(BaseAdminPlugin):
 
     user_can_access_owned_objects_only = False
