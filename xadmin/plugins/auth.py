@@ -201,7 +201,7 @@ class EmpresaFieldPlugin(BaseAdminPlugin):
 site.register_plugin(EmpresaFieldPlugin, ModelFormAdminView)
 
 
-class ModelPermissionPlugin(BaseAdminPlugin):
+"""class ModelPermissionPlugin(BaseAdminPlugin):
 
     user_can_access_owned_objects_only = False
     user_owned_objects_field = 'user'
@@ -213,7 +213,7 @@ class ModelPermissionPlugin(BaseAdminPlugin):
             qs = qs.filter(**filters)
         return qs
 
-site.register_plugin(ModelPermissionPlugin, ModelAdminView)
+site.register_plugin(ModelPermissionPlugin, ModelAdminView)"""
 
 
 class ProyectoEmpresaUsuarioModelPermissionPlugin(BaseAdminPlugin):
