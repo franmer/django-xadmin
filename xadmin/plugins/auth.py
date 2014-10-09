@@ -149,7 +149,7 @@ class UserFieldPlugin(BaseAdminPlugin):
                 if hasattr(datas['data'],'_mutable') and not datas['data']._mutable:
                     datas['data'] = datas['data'].copy()
                 for f in self.user_fields:
-                    datas['data'][f] = 3#self.user.pk
+                    datas['data'][f] = self.user.pk
         return datas
 
 site.register_plugin(UserFieldPlugin, ModelFormAdminView)
@@ -171,7 +171,7 @@ class ProyectoFieldPlugin(BaseAdminPlugin):
                 if hasattr(datas['data'],'_mutable') and not datas['data']._mutable:
                     datas['data'] = datas['data'].copy()
                 for f in self.proyecto_fields:
-                    datas['data'][f] = 7#self.user.cliente.proyecto.pk
+                    datas['data'][f] = self.user.cliente.proyecto.pk
                     #http://stackoverflow.com/questions/929029/how-do-i-access-the-child-classes-of-an-object-in-django-without-knowing-the-nam
                     #https://github.com/chrisglass/django_polymorphic
         return datas
@@ -195,7 +195,7 @@ class EmpresaFieldPlugin(BaseAdminPlugin):
                 if hasattr(datas['data'],'_mutable') and not datas['data']._mutable:
                     datas['data'] = datas['data'].copy()
                 for f in self.empresa_fields:
-                    datas['data'][f] = 7#self.user.cliente.proyecto.empresa_erp.pk  #Mejorar este acceso desde la clase padre si se puede.
+                    datas['data'][f] = self.user.cliente.proyecto.empresa_erp.pk  #Mejorar este acceso desde la clase padre si se puede.
         return datas
 
 site.register_plugin(EmpresaFieldPlugin, ModelFormAdminView)
@@ -214,6 +214,21 @@ class ModelPermissionPlugin(BaseAdminPlugin):
         return qs
 
 site.register_plugin(ModelPermissionPlugin, ModelAdminView)
+
+
+class ProyectoEmpresaUsuarioModelPermissionPlugin(BaseAdminPlugin):
+
+    user_can_access_proyect_objects_only = False
+    user_owned_objects_field = 'user'
+
+    def queryset(self, qs):
+        if self.user_can_access_owned_objects_only and \
+                not self.user.is_superuser:
+            filters = {self.user_owned_objects_field: self.user}
+            qs = qs.filter(**filters)
+        return qs
+
+site.register_plugin(ProyectoEmpresaUsuarioModelPermissionPlugin, ModelAdminView)
 
 
 class AccountMenuPlugin(BaseAdminPlugin):
