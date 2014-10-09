@@ -225,7 +225,17 @@ class ProyectoEmpresaUsuarioModelPermissionPlugin(BaseAdminPlugin):
         if self.user_can_access_proyecto_empresa_user_objects_only and \
                 not self.user.is_superuser:
             #filters = {self.user_owned_objects_field: self.user}
-            filters = {'user': self.user, 'empresa': self.user.cliente.proyecto.empresa_erp, 'proyecto': self.user.cliente.proyecto}
+            #filters = {'user': self.user, 'empresa': self.user.cliente.proyecto.empresa_erp, 'proyecto': self.user.cliente.proyecto}
+            filters = {}
+            filters['user'] = self.user
+            filters['empresa'] = self.user.cliente.proyecto.empresa_erp
+            filters['proyecto'] = self.user.cliente.proyecto
+            filters['user_id'] = self.user
+            filters['empresa_id'] = self.user.cliente.proyecto.empresa_erp
+            filters['proyecto_id'] = self.user.cliente.proyecto
+            filters['user_pk'] = self.user
+            filters['empresa_pk'] = self.user.cliente.proyecto.empresa_erp
+            filters['proyecto_pk'] = self.user.cliente.proyecto
             qs = qs.filter(**filters)
         return qs
 
