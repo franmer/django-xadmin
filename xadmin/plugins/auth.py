@@ -18,8 +18,8 @@ from users.models import User
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, ModelAdminView, CommAdminView, csrf_protect_m
 
 #debugger
-import pdb
-pdb.set_trace()
+"""import pdb
+pdb.set_trace()"""
 
 ACTION_NAME = {
     'add': _('Can add %s'),
