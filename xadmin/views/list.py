@@ -260,7 +260,7 @@ class ListAdminView(ModelAdminView):
                     if self.user.es_cliente():
                         filters['proyecto'] = self.user.cliente.proyecto
                     if self.user.es_empleado():
-                        filters['proyecto'] = self.user.empleado.proyectos
+                        pass#filters['proyecto'] = self.user.empleado.proyectos
                 except Exception as e:                    
                     queryset = queryset.none()
                     connection._rollback()
