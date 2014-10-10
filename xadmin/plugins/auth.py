@@ -164,8 +164,9 @@ class ProyectoFieldPlugin(BaseAdminPlugin):
 
     def get_field_attrs(self, __, db_field, **kwargs):
         if not self.user.is_superuser:
-            if self.proyecto_fields and db_field.name in self.proyecto_fields:
-                return {'widget': forms.HiddenInput}
+            if not self.user.is_empleado():
+                if self.proyecto_fields and db_field.name in self.proyecto_fields:
+                    return {'widget': forms.HiddenInput}
         return __()
 
     def get_form_datas(self, datas):
