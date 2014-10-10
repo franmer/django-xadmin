@@ -220,12 +220,14 @@ class ListAdminView(ModelAdminView):
 
         #Apply the security filters        
         filters = {}
-        if hasattr(queryset.model, 'empresa'):
+        
+        if not self.user.is_superuser:
+            if hasattr(queryset.model, 'empresa'):
                 filters['empresa'] = self.user.cliente.proyecto.empresa_erp
-        if hasattr(queryset.model, 'user'):
-            filters['user'] = self.user
-        if hasattr(queryset.model, 'proyecto'):         
-            filters['proyecto'] = self.user.cliente.proyecto
+            if hasattr(queryset.model, 'user'):
+                filters['user'] = self.user
+            if hasattr(queryset.model, 'proyecto'):         
+                filters['proyecto'] = self.user.cliente.proyecto
 
         queryset = queryset.filter(**filters)
         #Esto sería un object list vacio.
