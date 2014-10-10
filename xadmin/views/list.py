@@ -222,14 +222,11 @@ class ListAdminView(ModelAdminView):
         filters = {}
         if hasattr(queryset.model, 'empresa'):
                 filters['empresa'] = self.user.cliente.proyecto.empresa_erp
-        """filters['user'] = self.user            
+        if hasattr(queryset.model, 'user'):
+            filters['user'] = self.user
+        if hasattr(queryset.model, 'proyecto'):         
             filters['proyecto'] = self.user.cliente.proyecto
-            filters['user_id'] = self.user
-            filters['empresa_id'] = self.user.cliente.proyecto.empresa_erp
-            filters['proyecto_id'] = self.user.cliente.proyecto
-            filters['user_pk'] = self.user
-            filters['empresa_pk'] = self.user.cliente.proyecto.empresa_erp
-            filters['proyecto_pk'] = self.user.cliente.proyecto"""
+
         queryset = queryset.filter(**filters)
         #Esto sería un object list vacio.
         #queryset = self.queryset().none()
