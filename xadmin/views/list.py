@@ -219,7 +219,7 @@ class ListAdminView(ModelAdminView):
 
         #Apply the security filters        
         filters = {'empresa': self.user.cliente.proyecto.empresa_erp}
-            """filters['user'] = self.user
+        """filters['user'] = self.user
             filters['empresa'] = self.user.cliente.proyecto.empresa_erp
             filters['proyecto'] = self.user.cliente.proyecto
             filters['user_id'] = self.user
