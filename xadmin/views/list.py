@@ -215,7 +215,22 @@ class ListAdminView(ModelAdminView):
         Get model queryset. The query has been filted and ordered.
         """
         # First, get queryset from base class.
-        queryset = self.queryset().none()
+        queryset = self.queryset()
+
+        #Apply the security filters        
+        filters = {'empresa': self.user.cliente.proyecto.empresa_erp}
+            """filters['user'] = self.user
+            filters['empresa'] = self.user.cliente.proyecto.empresa_erp
+            filters['proyecto'] = self.user.cliente.proyecto
+            filters['user_id'] = self.user
+            filters['empresa_id'] = self.user.cliente.proyecto.empresa_erp
+            filters['proyecto_id'] = self.user.cliente.proyecto
+            filters['user_pk'] = self.user
+            filters['empresa_pk'] = self.user.cliente.proyecto.empresa_erp
+            filters['proyecto_pk'] = self.user.cliente.proyecto"""
+        queryset.filter(**filters)
+        #Esto sería un object list vacio.
+        #queryset = self.queryset().none()
 
         # Use select_related() if one of the list_display options is a field
         # with a relationship and the provided queryset doesn't already have
