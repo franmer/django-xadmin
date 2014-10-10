@@ -17,7 +17,9 @@ from xadmin.util import unquote
 from users.models import User
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, ModelAdminView, CommAdminView, csrf_protect_m
 
-import pdb; pdb.set_trace()
+#debugger
+import pdb
+pdb.set_trace()
 
 ACTION_NAME = {
     'add': _('Can add %s'),
