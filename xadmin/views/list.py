@@ -15,6 +15,8 @@ from xadmin.util import lookup_field, display_for_field, label_for_field, boolea
 
 from base import ModelAdminView, filter_hook, inclusion_tag, csrf_protect_m
 
+from django.http import HttpResponseNotAllowed
+
 # List settings
 ALL_VAR = 'all'
 ORDER_VAR = 'o'
@@ -210,6 +212,9 @@ class ListAdminView(ModelAdminView):
     def post_result_list(self):
         return self.make_result_list()
 
+    def not_allowed_redirect(self, exception):
+        return HttpResponseNotAllowed("No tiene permisos para acceder al listado: ".join(exception.message).join(type(exception)))
+
     @filter_hook
     def get_list_queryset(self):
         """
@@ -218,20 +223,36 @@ class ListAdminView(ModelAdminView):
         # First, get queryset from base class.
         queryset = self.queryset()
 
+        #eSgISO Securty Block
         #Apply the security filters        
         filters = {}
         
         if not self.user.is_superuser:
             if hasattr(queryset.model, 'empresa'):
-                filters['empresa'] = self.user.cliente.proyecto.empresa_erp
+                try: #Usamos try porque puede que acceder al objecto empresa_erp, por ejemplo, casque.
+                    filters['empresa'] = self.user.cliente.proyecto.empresa_erp
+                except Exception as e:                    
+                    queryset = queryset.none()
+                    return not_allowed_redirect(self, e)
             if hasattr(queryset.model, 'user'):
-                filters['user'] = self.user
+                try:
+                    filters['user'] = self.user
+                except Exception as e:                    
+                    queryset = queryset.none()
+                    return not_allowed_redirect(self, e)
             if hasattr(queryset.model, 'proyecto'):         
-                filters['proyecto'] = self.user.cliente.proyecto
+                try:
+                    filters['proyecto'] = self.user.cliente.proyecto
+                except Exception as e:                    
+                    queryset = queryset.none()
+                    return not_allowed_redirect(self, e)
+        #Si hay campo empresa, usuario o proyecto por el que filtrar y el user no lo provee, vaciamos el qs.
+        #PENDIENTE!!!!
+        #Quizá habría que redirigir a html permission denied e indicar (no tiene un proyecto existente luego no puede ver esta entidad.)
 
         queryset = queryset.filter(**filters)
-        #Esto sería un object list vacio.
-        #queryset = self.queryset().none()
+        #eSgISO Securty Block END
+        
 
         # Use select_related() if one of the list_display options is a field
         # with a relationship and the provided queryset doesn't already have
