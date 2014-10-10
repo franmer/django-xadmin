@@ -242,7 +242,7 @@ class ListAdminView(ModelAdminView):
                 except Exception as e:                    
                     queryset = queryset.none()
                     connection._rollback()
-                    #self.message_user( _("Le falta alguna asignación para poder acceder"), 'error')
+                    self.message_user( _("Necesita estar asignado a una empresa para poder acceder a este listado."), 'error')
                     #return self.not_allowed_redirect() ______ Pendiente de mejorar hacer el response desde aqui para poner el permission denied.
             if hasattr(queryset.model, 'user'):
                 try:
@@ -250,7 +250,7 @@ class ListAdminView(ModelAdminView):
                 except Exception as e:                    
                     queryset = queryset.none()
                     connection._rollback()
-                    #self.message_user( _("Le falta alguna asignación para poder acceder"), 'error')
+                    self.message_user( _("Necesita ser un usuario para poder acceder a este listado. "), 'error')
                     #return self.not_allowed_redirect()
             if hasattr(queryset.model, 'proyecto'):         
                 try:
@@ -258,7 +258,7 @@ class ListAdminView(ModelAdminView):
                 except Exception as e:                    
                     queryset = queryset.none()
                     connection._rollback()
-                    #self.message_user( _("Le falta alguna asignación para poder acceder"), 'error')
+                    self.message_user( _("Necesita estar asignado a un proyecto para poder acceder a este listado"), 'error')
                     #return self.not_allowed_redirect()
         #Si hay campo empresa, usuario o proyecto por el que filtrar y el user no lo provee, vaciamos el qs.
         #PENDIENTE!!!!
