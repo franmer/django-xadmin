@@ -238,13 +238,13 @@ class ListAdminView(ModelAdminView):
             from django.db import connection
             if hasattr(queryset.model, 'empresa'):
                 try: #Usamos try porque puede que acceder al objecto empresa_erp, por ejemplo, casque.
-                    if self.user.cliente.exists(): #hacer un manager sencillito en la clase del user que busque, o bien boolean fields que se coloquen al crear.
+                    if self.user.es_cliente(): #hacer un manager sencillito en la clase del user que busque, o bien boolean fields que se coloquen al crear.
                         filters['empresa'] = self.user.cliente.proyecto.empresa_erp
-                    if self.user.empleado.exists():
+                    if self.user.es_empleado():
                         filters['empresa'] = self.user.empleado.proyectos.empresa_erp
                 except Exception as e:                    
                     queryset = queryset.none()
-                    connection._rollback()
+                    connection._rollback() #intentar quitar este rollback, no se porque sale. Debe ser el queryset none a lo mejor porque entemos en medio de una transact?????
                     self.message_user( _("Necesita estar asignado a una empresa para poder acceder a este listado."), 'error')
                     #return self.not_allowed_redirect() ______ Pendiente de mejorar hacer el response desde aqui para poner el permission denied.
             if hasattr(queryset.model, 'user'):
@@ -257,9 +257,9 @@ class ListAdminView(ModelAdminView):
                     #return self.not_allowed_redirect()
             if hasattr(queryset.model, 'proyecto'):         
                 try:
-                    if self.user.cliente.exists():
+                    if self.user.es_cliente():
                         filters['proyecto'] = self.user.cliente.proyecto
-                    if self.user.empleado.exists():
+                    if self.user.es_empleado():
                         filters['proyecto'] = self.user.empleado.proyectos
                 except Exception as e:                    
                     queryset = queryset.none()
