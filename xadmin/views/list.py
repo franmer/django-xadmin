@@ -212,7 +212,7 @@ class ListAdminView(ModelAdminView):
     def post_result_list(self):
         return self.make_result_list()
 
-    #, exception
+    #, exception   ______ Pendiente de mejorar hacer el response desde aqui para poner el permission denied.
     def not_allowed_redirect(self):
         return HttpResponseNotAllowed("No tiene permisos para acceder al listado: ")
         #.join(exception.message).join(type(exception))
@@ -225,6 +225,9 @@ class ListAdminView(ModelAdminView):
         # First, get queryset from base class.
         queryset = self.queryset()
 
+        #Ejemplazo de mensaje dinámico
+        #msg = _(          'The %(name)s "%(obj)s" was added successfully.') % {'name': force_unicode(self.opts.verbose_name), 'obj': "<a class='alert-link' href='%s'>%s</a>" % (self.model_admin_url('change', self.new_obj._get_pk_val()), force_unicode(self.new_obj))}
+        
         #eSgISO Securty Block
         #Apply the security filters        
         filters = {}
@@ -235,19 +238,22 @@ class ListAdminView(ModelAdminView):
                     filters['empresa'] = self.user.cliente.proyecto.empresa_erp
                 except Exception as e:                    
                     queryset = queryset.none()
-                    return self.not_allowed_redirect()
+                    self.message_user( _("Le falta alguna asignación para poder acceder"), 'error')
+                    #return self.not_allowed_redirect() ______ Pendiente de mejorar hacer el response desde aqui para poner el permission denied.
             if hasattr(queryset.model, 'user'):
                 try:
                     filters['user'] = self.user
                 except Exception as e:                    
                     queryset = queryset.none()
-                    return self.not_allowed_redirect()
+                    self.message_user( _("Le falta alguna asignación para poder acceder"), 'error')
+                    #return self.not_allowed_redirect()
             if hasattr(queryset.model, 'proyecto'):         
                 try:
                     filters['proyecto'] = self.user.cliente.proyecto
                 except Exception as e:                    
                     queryset = queryset.none()
-                    return self.not_allowed_redirect()
+                    self.message_user( _("Le falta alguna asignación para poder acceder"), 'error')
+                    #return self.not_allowed_redirect()
         #Si hay campo empresa, usuario o proyecto por el que filtrar y el user no lo provee, vaciamos el qs.
         #PENDIENTE!!!!
         #Quizá habría que redirigir a html permission denied e indicar (no tiene un proyecto existente luego no puede ver esta entidad.)
