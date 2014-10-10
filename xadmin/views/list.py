@@ -215,7 +215,7 @@ class ListAdminView(ModelAdminView):
         Get model queryset. The query has been filted and ordered.
         """
         # First, get queryset from base class.
-        queryset = ()#self.queryset()
+        queryset = self.queryset().none()
 
         # Use select_related() if one of the list_display options is a field
         # with a relationship and the provided queryset doesn't already have
