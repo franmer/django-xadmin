@@ -217,11 +217,14 @@ class ListAdminView(ModelAdminView):
         """
         # First, get queryset from base class.
         queryset = self.queryset()
+        tester = self.queryset().all()[0]
 
         #Apply the security filters        
-        filters = {'empresa': self.user.cliente.proyecto.empresa_erp}
-        """filters['user'] = self.user
-            filters['empresa'] = self.user.cliente.proyecto.empresa_erp
+        filters = {}
+        if tester:
+            if tester.empresa:
+                filters['empresa'] = self.user.cliente.proyecto.empresa_erp
+        """filters['user'] = self.user            
             filters['proyecto'] = self.user.cliente.proyecto
             filters['user_id'] = self.user
             filters['empresa_id'] = self.user.cliente.proyecto.empresa_erp
