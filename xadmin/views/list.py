@@ -238,7 +238,10 @@ class ListAdminView(ModelAdminView):
             from django.db import connection
             if hasattr(queryset.model, 'empresa'):
                 try: #Usamos try porque puede que acceder al objecto empresa_erp, por ejemplo, casque.
-                    filters['empresa'] = self.user.cliente.proyecto.empresa_erp
+                    if self.user.cliente.exists(): #hacer un manager sencillito en la clase del user que busque, o bien boolean fields que se coloquen al crear.
+                        filters['empresa'] = self.user.cliente.proyecto.empresa_erp
+                    if self.user.empleado.exists():
+                        filters['empresa'] = self.user.empleado.proyectos.empresa_erp
                 except Exception as e:                    
                     queryset = queryset.none()
                     connection._rollback()
@@ -254,7 +257,10 @@ class ListAdminView(ModelAdminView):
                     #return self.not_allowed_redirect()
             if hasattr(queryset.model, 'proyecto'):         
                 try:
-                    filters['proyecto'] = self.user.cliente.proyecto
+                    if self.user.cliente.exists():
+                        filters['proyecto'] = self.user.cliente.proyecto
+                    if self.user.empleado.exists():
+                        filters['proyecto'] = self.user.empleado.proyectos
                 except Exception as e:                    
                     queryset = queryset.none()
                     connection._rollback()

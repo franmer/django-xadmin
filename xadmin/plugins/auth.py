@@ -219,7 +219,8 @@ site.register_plugin(EmpresaFieldPlugin, ModelFormAdminView)
 site.register_plugin(ModelPermissionPlugin, ModelAdminView)"""
 
 
-class ProyectoEmpresaUsuarioModelPermissionPlugin(BaseAdminPlugin):
+#Intentar corregir esto, y que sea como plugin, ahora está hackeado en list.py eSgISO security directamente el queryset method
+"""class ProyectoEmpresaUsuarioModelPermissionPlugin(BaseAdminPlugin):
 
     user_can_access_proyecto_empresa_user_objects_only = False
     #user_owned_objects_field = 'user'
@@ -242,7 +243,7 @@ class ProyectoEmpresaUsuarioModelPermissionPlugin(BaseAdminPlugin):
         return qs
 
 site.register_plugin(ProyectoEmpresaUsuarioModelPermissionPlugin, ModelAdminView)
-
+"""
 
 class AccountMenuPlugin(BaseAdminPlugin):
 
