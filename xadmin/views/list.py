@@ -212,8 +212,10 @@ class ListAdminView(ModelAdminView):
     def post_result_list(self):
         return self.make_result_list()
 
-    def not_allowed_redirect(self, exception):
-        return HttpResponseNotAllowed("No tiene permisos para acceder al listado: ".join(exception.message).join(type(exception)))
+    #, exception
+    def not_allowed_redirect(self):
+        return HttpResponseNotAllowed("No tiene permisos para acceder al listado: ")
+        #.join(exception.message).join(type(exception))
 
     @filter_hook
     def get_list_queryset(self):
@@ -233,19 +235,19 @@ class ListAdminView(ModelAdminView):
                     filters['empresa'] = self.user.cliente.proyecto.empresa_erp
                 except Exception as e:                    
                     queryset = queryset.none()
-                    return self.not_allowed_redirect(e)
+                    return self.not_allowed_redirect()
             if hasattr(queryset.model, 'user'):
                 try:
                     filters['user'] = self.user
                 except Exception as e:                    
                     queryset = queryset.none()
-                    return self.not_allowed_redirect(e)
+                    return self.not_allowed_redirect()
             if hasattr(queryset.model, 'proyecto'):         
                 try:
                     filters['proyecto'] = self.user.cliente.proyecto
                 except Exception as e:                    
                     queryset = queryset.none()
-                    return self.not_allowed_redirect(e)
+                    return self.not_allowed_redirect()
         #Si hay campo empresa, usuario o proyecto por el que filtrar y el user no lo provee, vaciamos el qs.
         #PENDIENTE!!!!
         #Quizá habría que redirigir a html permission denied e indicar (no tiene un proyecto existente luego no puede ver esta entidad.)
