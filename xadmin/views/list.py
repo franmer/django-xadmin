@@ -233,19 +233,19 @@ class ListAdminView(ModelAdminView):
                     filters['empresa'] = self.user.cliente.proyecto.empresa_erp
                 except Exception as e:                    
                     queryset = queryset.none()
-                    return self.not_allowed_redirect(self, e)
+                    return self.not_allowed_redirect(e)
             if hasattr(queryset.model, 'user'):
                 try:
                     filters['user'] = self.user
                 except Exception as e:                    
                     queryset = queryset.none()
-                    return self.not_allowed_redirect(self, e)
+                    return self.not_allowed_redirect(e)
             if hasattr(queryset.model, 'proyecto'):         
                 try:
                     filters['proyecto'] = self.user.cliente.proyecto
                 except Exception as e:                    
                     queryset = queryset.none()
-                    return self.not_allowed_redirect(self, e)
+                    return self.not_allowed_redirect(e)
         #Si hay campo empresa, usuario o proyecto por el que filtrar y el user no lo provee, vaciamos el qs.
         #PENDIENTE!!!!
         #Quizá habría que redirigir a html permission denied e indicar (no tiene un proyecto existente luego no puede ver esta entidad.)
