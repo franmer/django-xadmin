@@ -54,6 +54,11 @@ class AdminSelectWidget(forms.Select):
     def media(self):
         return vendor('select.js', 'select.css', 'xadmin.widget.select.js')
 
+from smart_selects.widgets import ChainedSelect
+
+class AdminChainedSelectWidget(AdminSelectWidget):
+	pass
+
 
 class AdminSplitDateTime(forms.SplitDateTimeWidget):
     """
