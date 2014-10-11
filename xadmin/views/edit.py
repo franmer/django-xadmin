@@ -18,6 +18,8 @@ from xadmin.views.detail import DetailAdminUtil
 
 from base import ModelAdminView, filter_hook, csrf_protect_m
 
+from smart_selects.db_fields import ChainedForeignKey
+from smart_selects.widgets import chainedSelect
 
 FORMFIELD_FOR_DBFIELD_DEFAULTS = {
     models.DateTimeField: {
@@ -35,6 +37,7 @@ FORMFIELD_FOR_DBFIELD_DEFAULTS = {
     models.ImageField: {'widget': widgets.AdminFileWidget},
     models.FileField: {'widget': widgets.AdminFileWidget},
     models.ForeignKey: {'widget': widgets.AdminSelectWidget},
+    ChainedForeignKey: {'widget': chainedSelect}, #added smart_selects functionality
     models.OneToOneField: {'widget': widgets.AdminSelectWidget},
     models.ManyToManyField: {'widget': widgets.AdminSelectMultiple},
 }

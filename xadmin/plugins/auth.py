@@ -164,14 +164,14 @@ class ProyectoFieldPlugin(BaseAdminPlugin):
 
     def get_field_attrs(self, __, db_field, **kwargs):
         if not self.user.is_superuser:
-            if not self.user.es_empleado():
+            if not self.user.es_empleado(): #esto no está del todo bien, pero bueno. es para evitaar
                 if self.proyecto_fields and db_field.name in self.proyecto_fields:
                     return {'widget': forms.HiddenInput}
         return __()
 
     def get_form_datas(self, datas):
         if not self.user.is_superuser:
-            if not self.user.es_empleado():
+            if not self.user.es_empleado():   #esto no está del todo bien, pero bueno.
                 if self.proyecto_fields and 'data' in datas:
                     if hasattr(datas['data'],'_mutable') and not datas['data']._mutable:
                         datas['data'] = datas['data'].copy()
