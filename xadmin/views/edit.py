@@ -19,7 +19,7 @@ from xadmin.views.detail import DetailAdminUtil
 from base import ModelAdminView, filter_hook, csrf_protect_m
 
 from smart_selects.db_fields import ChainedForeignKey
-from smart_selects.widgets import chainedSelect
+from smart_selects.widgets import ChainedSelect
 
 FORMFIELD_FOR_DBFIELD_DEFAULTS = {
     models.DateTimeField: {
