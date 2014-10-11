@@ -37,7 +37,7 @@ FORMFIELD_FOR_DBFIELD_DEFAULTS = {
     models.ImageField: {'widget': widgets.AdminFileWidget},
     models.FileField: {'widget': widgets.AdminFileWidget},
     models.ForeignKey: {'widget': widgets.AdminSelectWidget},
-    ChainedForeignKey: {'widget': chainedSelect}, #added smart_selects functionality
+    ChainedForeignKey: {'widget': ChainedSelect}, #added smart_selects functionality
     models.OneToOneField: {'widget': widgets.AdminSelectWidget},
     models.ManyToManyField: {'widget': widgets.AdminSelectMultiple},
 }
