@@ -249,7 +249,9 @@ class ModelFormAdminView(ModelAdminView):
     def get(self, request, *args, **kwargs):
         self.instance_forms()
         self.setup_forms()
-
+        from esgiso.models import ClienteProveedor
+        #self.form_fields["clienteproveedor"].queryset = ClienteProveedor.objects.filter(proyecto=self.request.user.cliente.proyecto)
+        self.form_obj.fields['clienteproveedor'].queryset = self.form_obj.fields['clienteproveedor'].queryset.filter(proyecto=self.request.user.cliente.proyecto)
         return self.get_response()
 
     @csrf_protect_m
@@ -329,11 +331,10 @@ class ModelFormAdminView(ModelAdminView):
         return super(ModelFormAdminView, self).get_media() + self.form_obj.media + \
             self.vendor('xadmin.page.form.js', 'xadmin.form.css')
 
-from esgiso.models import ClienteProveedor
+
 class CreateAdminView(ModelFormAdminView):
     form.f
-    def init_request(self, *args, **kwargs):
-        self.form_fields["clienteproveedor"].queryset = ClienteProveedor.objects.filter(proyecto=self.request.user.cliente.proyecto)
+    def init_request(self, *args, **kwargs):        
         self.org_obj = None
 
         if not self.has_add_permission():
