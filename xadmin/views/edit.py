@@ -249,9 +249,14 @@ class ModelFormAdminView(ModelAdminView):
     def get(self, request, *args, **kwargs):
         self.instance_forms()
         self.setup_forms()
-        from esgiso.models import ClienteProveedor
-        #self.form_fields["clienteproveedor"].queryset = ClienteProveedor.objects.filter(proyecto=self.request.user.cliente.proyecto)
-        self.form_obj.fields['clienteproveedor'].queryset = self.form_obj.fields['clienteproveedor'].queryset.filter(proyecto=self.request.user.cliente.proyecto)
+        
+        #eSgISO hack for proyecto in foreignkey fields
+        if not self.user.is_superadmin() and self.request.user.get_proyecto():
+        for idx, val in enumerate(self.form_fields):            
+            try: #try porque igual algunos fields no tiene queryset porque no son foreigkey. Mejorarlo.
+                self.form_fields[idx].queryset = self.form_fields[idx].queryset.filter(proyecto = self.request.user.get_proyecto())
+        #eSgISO hack for proyecto in foreignkey fields
+
         return self.get_response()
 
     @csrf_protect_m
