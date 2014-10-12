@@ -146,6 +146,7 @@ class ModelFormAdminView(ModelAdminView):
         helper = self.get_form_helper()
         if helper:
             self.form_obj.helper = helper
+        self.aplicar_seguridad_por_proyecto()
 
     @filter_hook
     def valid_forms(self):
@@ -244,11 +245,8 @@ class ModelFormAdminView(ModelAdminView):
     def save_related(self):
         self.form_obj.save_m2m()
 
-    @csrf_protect_m
     @filter_hook
-    def get(self, request, *args, **kwargs):
-        self.instance_forms()
-        self.setup_forms()
+    def aplicar_seguridad_por_proyecto(self):
         #eSgISO hack for proyecto in foreignkey fields
         if not self.user.is_superuser: #and self.request.user.get_proyecto(): (hacrea algo aqui para bool)
             """for idx, val in enumerate(self.form_obj):            
@@ -267,6 +265,12 @@ class ModelFormAdminView(ModelAdminView):
         #self.form_obj.fields['clienteproveedor'].queryset = self.form_obj.fields['clienteproveedor'].queryset.filter(proyecto=self.request.user.cliente.proyecto)
         #Orig that worked: self.form_obj.fields['clienteproveedor'].queryset = self.form_obj.fields['clienteproveedor'].queryset.filter(proyecto=self.request.user.cliente.proyecto)
         #eSgISO hack for proyecto in foreignkey fields
+
+    @csrf_protect_m
+    @filter_hook
+    def get(self, request, *args, **kwargs):
+        self.instance_forms()
+        self.setup_forms()        
         return self.get_response()
 
     @csrf_protect_m
@@ -275,7 +279,6 @@ class ModelFormAdminView(ModelAdminView):
     def post(self, request, *args, **kwargs):
         self.instance_forms()
         self.setup_forms()
-
         if self.valid_forms():
             self.save_forms()
             self.save_models()
