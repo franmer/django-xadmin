@@ -205,6 +205,34 @@ class EmpresaFieldPlugin(BaseAdminPlugin):
 
 site.register_plugin(EmpresaFieldPlugin, ModelFormAdminView)
 
+"""
+class SeguridadPorProyectoPlugin(BaseAdminPlugin):
+
+    seguridad_por_proyecto = False
+
+    def aplicar_seguridad_por_proyecto(self):
+        #eSgISO hack for proyecto in foreignkey fields
+        if not self.user.is_superuser: #and self.request.user.get_proyecto(): (hacrea algo aqui para bool)            
+            for key in self.form_obj.fields:            
+                try: #try porque igual algunos fields no tiene queryset porque no son foreigkey. Mejorarlo.
+                    #self.form_obj[key].queryset = self.form_obj[key].queryset.filter(proyecto = self.request.user.get_proyecto())
+                    self.form_obj.fields[key].queryset = self.form_obj.fields[key].queryset.filter(proyecto = self.request.user.get_proyecto())
+                    #.values()[idx]
+                except:
+                    pass
+        #self.form_obj.fields['clienteproveedor'].queryset = self.form_obj.fields['clienteproveedor'].queryset.filter(proyecto=self.request.user.cliente.proyecto)
+        #Orig that worked: self.form_obj.fields['clienteproveedor'].queryset = self.form_obj.fields['clienteproveedor'].queryset.filter(proyecto=self.request.user.cliente.proyecto)
+        #eSgISO hack for proyecto in foreignkey fields
+
+    def setup_forms(self):
+        super de setuf forms...
+        if self.seguridad_por_proyecto
+            self.aplicar_seguridad_por_proyecto()
+
+site.register_plugin(SeguridadPorProyectoPlugin, ModelFormAdminView)
+"""
+
+
 
 """class ModelPermissionPlugin(BaseAdminPlugin):
 
