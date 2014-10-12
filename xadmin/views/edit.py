@@ -264,6 +264,7 @@ class ModelFormAdminView(ModelAdminView):
                     #.values()[idx]
                 except:
                     pass
+        self.form_obj.fields['clienteproveedor'].queryset = self.form_obj.fields['clienteproveedor'].queryset.filter(proyecto=self.request.user.cliente.proyecto)
         #Orig that worked: self.form_obj.fields['clienteproveedor'].queryset = self.form_obj.fields['clienteproveedor'].queryset.filter(proyecto=self.request.user.cliente.proyecto)
         #eSgISO hack for proyecto in foreignkey fields
         return self.get_response()
