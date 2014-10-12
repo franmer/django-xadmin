@@ -257,14 +257,14 @@ class ModelFormAdminView(ModelAdminView):
                     #.values()[idx]
                 except:
                     continue        """
-            for key in self.form_obj:            
+            for key, value in self.form_obj.fields:            
                 try: #try porque igual algunos fields no tiene queryset porque no son foreigkey. Mejorarlo.
                     #self.form_obj[key].queryset = self.form_obj[key].queryset.filter(proyecto = self.request.user.get_proyecto())
-                    self.form_obj[key].queryset = self.form_obj[key].queryset.filter(proyecto = self.request.user.get_proyecto())
+                    self.form_obj.fields[key].queryset = value.queryset.filter(proyecto = self.request.user.get_proyecto())
                     #.values()[idx]
                 except:
                     pass
-        self.form_obj.fields['clienteproveedor'].queryset = self.form_obj.fields['clienteproveedor'].queryset.filter(proyecto=self.request.user.cliente.proyecto)
+        #self.form_obj.fields['clienteproveedor'].queryset = self.form_obj.fields['clienteproveedor'].queryset.filter(proyecto=self.request.user.cliente.proyecto)
         #Orig that worked: self.form_obj.fields['clienteproveedor'].queryset = self.form_obj.fields['clienteproveedor'].queryset.filter(proyecto=self.request.user.cliente.proyecto)
         #eSgISO hack for proyecto in foreignkey fields
         return self.get_response()
