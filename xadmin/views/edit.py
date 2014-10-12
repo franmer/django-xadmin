@@ -251,13 +251,14 @@ class ModelFormAdminView(ModelAdminView):
         self.setup_forms()
         
         #eSgISO hack for proyecto in foreignkey fields
-        if not self.user.is_superadmin() and self.request.user.get_proyecto():
+        if not self.user.is_superuser() and self.request.user.get_proyecto():
             for idx, val in enumerate(self.form_fields):            
                 try: #try porque igual algunos fields no tiene queryset porque no son foreigkey. Mejorarlo.
                     self.form_fields[idx].queryset = self.form_fields[idx].queryset.filter(proyecto = self.request.user.get_proyecto())
                 except:
                     pass
-        return self.get_response() #eSgISO hack for proyecto in foreignkey fields
+        #eSgISO hack for proyecto in foreignkey fields
+        return self.get_response()
 
     @csrf_protect_m
     @transaction.commit_on_success
