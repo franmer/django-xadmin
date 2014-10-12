@@ -251,11 +251,19 @@ class ModelFormAdminView(ModelAdminView):
         self.setup_forms()
         #eSgISO hack for proyecto in foreignkey fields
         if not self.user.is_superuser: #and self.request.user.get_proyecto(): (hacrea algo aqui para bool)
-            for idx, val in enumerate(self.form_obj):            
+            """for idx, val in enumerate(self.form_obj):            
                 try: #try porque igual algunos fields no tiene queryset porque no son foreigkey. Mejorarlo.
                     self.form_obj[idx].queryset = self.form_obj[idx].queryset.filter(proyecto = self.request.user.get_proyecto())
+                    #.values()[idx]
                 except:
-                    pass        
+                    continue        """
+            for key, value in self.form_obj:            
+                try: #try porque igual algunos fields no tiene queryset porque no son foreigkey. Mejorarlo.
+                    #self.form_obj[key].queryset = self.form_obj[key].queryset.filter(proyecto = self.request.user.get_proyecto())
+                    self.form_obj[key].queryset = value.queryset.filter(proyecto = self.request.user.get_proyecto())
+                    #.values()[idx]
+                except:
+                    continue  
         #Orig that worked: self.form_obj.fields['clienteproveedor'].queryset = self.form_obj.fields['clienteproveedor'].queryset.filter(proyecto=self.request.user.cliente.proyecto)
         #eSgISO hack for proyecto in foreignkey fields
         return self.get_response()
