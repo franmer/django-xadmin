@@ -329,7 +329,7 @@ class ModelFormAdminView(ModelAdminView):
         return super(ModelFormAdminView, self).get_media() + self.form_obj.media + \
             self.vendor('xadmin.page.form.js', 'xadmin.form.css')
 
-
+from esgiso.models import ClienteProveedor
 class CreateAdminView(ModelFormAdminView):
 
     def init_request(self, *args, **kwargs):
