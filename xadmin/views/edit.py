@@ -333,6 +333,7 @@ class ModelFormAdminView(ModelAdminView):
 class CreateAdminView(ModelFormAdminView):
 
     def init_request(self, *args, **kwargs):
+        self.form.fields["clienteproveedor"].queryset = ClienteProveedor.objects.filter(proyecto=self.request.user.cliente.proyecto)
         self.org_obj = None
 
         if not self.has_add_permission():
