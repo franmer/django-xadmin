@@ -331,9 +331,9 @@ class ModelFormAdminView(ModelAdminView):
 
 from esgiso.models import ClienteProveedor
 class CreateAdminView(ModelFormAdminView):
-
+    form.f
     def init_request(self, *args, **kwargs):
-        self.form.fields["clienteproveedor"].queryset = ClienteProveedor.objects.filter(proyecto=self.request.user.cliente.proyecto)
+        self.form_fields["clienteproveedor"].queryset = ClienteProveedor.objects.filter(proyecto=self.request.user.cliente.proyecto)
         self.org_obj = None
 
         if not self.has_add_permission():
