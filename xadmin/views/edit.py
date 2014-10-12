@@ -333,7 +333,7 @@ class ModelFormAdminView(ModelAdminView):
 
 
 class CreateAdminView(ModelFormAdminView):
-    form.f
+    
     def init_request(self, *args, **kwargs):        
         self.org_obj = None
 
