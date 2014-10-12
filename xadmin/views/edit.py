@@ -256,7 +256,6 @@ class ModelFormAdminView(ModelAdminView):
                 try: #try porque igual algunos fields no tiene queryset porque no son foreigkey. Mejorarlo.
                     self.form_fields[idx].queryset = self.form_fields[idx].queryset.filter(proyecto = self.request.user.get_proyecto())
         #eSgISO hack for proyecto in foreignkey fields
-
         return self.get_response()
 
     @csrf_protect_m
