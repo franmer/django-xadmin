@@ -164,19 +164,21 @@ class ProyectoFieldPlugin(BaseAdminPlugin):
 
     def get_field_attrs(self, __, db_field, **kwargs):
         if not self.user.is_superuser:
-            if self.proyecto_fields and db_field.name in self.proyecto_fields:
-                return {'widget': forms.HiddenInput}
+            if not self.user.es_empleado(): #esto no está del todo bien, pero bueno. es para evitaar
+                if self.proyecto_fields and db_field.name in self.proyecto_fields:
+                    return {'widget': forms.HiddenInput}
         return __()
 
     def get_form_datas(self, datas):
         if not self.user.is_superuser:
-            if self.proyecto_fields and 'data' in datas:
-                if hasattr(datas['data'],'_mutable') and not datas['data']._mutable:
-                    datas['data'] = datas['data'].copy()
-                for f in self.proyecto_fields:
-                    datas['data'][f] = self.user.cliente.proyecto.pk
-                    #http://stackoverflow.com/questions/929029/how-do-i-access-the-child-classes-of-an-object-in-django-without-knowing-the-nam
-                    #https://github.com/chrisglass/django_polymorphic
+            if not self.user.es_empleado():   #esto no está del todo bien, pero bueno.
+                if self.proyecto_fields and 'data' in datas:
+                    if hasattr(datas['data'],'_mutable') and not datas['data']._mutable:
+                        datas['data'] = datas['data'].copy()
+                    for f in self.proyecto_fields:
+                        datas['data'][f] = self.user.cliente.proyecto.pk
+                        #http://stackoverflow.com/questions/929029/how-do-i-access-the-child-classes-of-an-object-in-django-without-knowing-the-nam
+                        #https://github.com/chrisglass/django_polymorphic
         return datas
 
 site.register_plugin(ProyectoFieldPlugin, ModelFormAdminView)
@@ -203,6 +205,34 @@ class EmpresaFieldPlugin(BaseAdminPlugin):
 
 site.register_plugin(EmpresaFieldPlugin, ModelFormAdminView)
 
+"""
+class SeguridadPorProyectoPlugin(BaseAdminPlugin):
+
+    seguridad_por_proyecto = False
+
+    def aplicar_seguridad_por_proyecto(self):
+        #eSgISO hack for proyecto in foreignkey fields
+        if not self.user.is_superuser: #and self.request.user.get_proyecto(): (hacrea algo aqui para bool)            
+            for key in self.form_obj.fields:            
+                try: #try porque igual algunos fields no tiene queryset porque no son foreigkey. Mejorarlo.
+                    #self.form_obj[key].queryset = self.form_obj[key].queryset.filter(proyecto = self.request.user.get_proyecto())
+                    self.form_obj.fields[key].queryset = self.form_obj.fields[key].queryset.filter(proyecto = self.request.user.get_proyecto())
+                    #.values()[idx]
+                except:
+                    pass
+        #self.form_obj.fields['clienteproveedor'].queryset = self.form_obj.fields['clienteproveedor'].queryset.filter(proyecto=self.request.user.cliente.proyecto)
+        #Orig that worked: self.form_obj.fields['clienteproveedor'].queryset = self.form_obj.fields['clienteproveedor'].queryset.filter(proyecto=self.request.user.cliente.proyecto)
+        #eSgISO hack for proyecto in foreignkey fields
+
+    def setup_forms(self):
+        super de setuf forms...
+        if self.seguridad_por_proyecto
+            self.aplicar_seguridad_por_proyecto()
+
+site.register_plugin(SeguridadPorProyectoPlugin, ModelFormAdminView)
+"""
+
+
 
 """class ModelPermissionPlugin(BaseAdminPlugin):
 
@@ -219,7 +249,8 @@ site.register_plugin(EmpresaFieldPlugin, ModelFormAdminView)
 site.register_plugin(ModelPermissionPlugin, ModelAdminView)"""
 
 
-class ProyectoEmpresaUsuarioModelPermissionPlugin(BaseAdminPlugin):
+#Intentar corregir esto, y que sea como plugin, ahora está hackeado en list.py eSgISO security directamente el queryset method
+"""class ProyectoEmpresaUsuarioModelPermissionPlugin(BaseAdminPlugin):
 
     user_can_access_proyecto_empresa_user_objects_only = False
     #user_owned_objects_field = 'user'
@@ -242,7 +273,7 @@ class ProyectoEmpresaUsuarioModelPermissionPlugin(BaseAdminPlugin):
         return qs
 
 site.register_plugin(ProyectoEmpresaUsuarioModelPermissionPlugin, ModelAdminView)
-
+"""
 
 class AccountMenuPlugin(BaseAdminPlugin):
 

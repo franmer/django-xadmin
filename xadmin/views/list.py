@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import InvalidPage, Paginator
 from django.db import models
@@ -13,6 +14,8 @@ from django.utils.translation import ugettext as _
 from xadmin.util import lookup_field, display_for_field, label_for_field, boolean_icon
 
 from base import ModelAdminView, filter_hook, inclusion_tag, csrf_protect_m
+
+from django.http import HttpResponseNotAllowed
 
 # List settings
 ALL_VAR = 'all'
@@ -209,6 +212,11 @@ class ListAdminView(ModelAdminView):
     def post_result_list(self):
         return self.make_result_list()
 
+    #, exception   ______ Pendiente de mejorar hacer el response desde aqui para poner el permission denied.
+    def not_allowed_redirect(self):
+        return HttpResponseNotAllowed("No tiene permisos para acceder al listado: ")
+        #.join(exception.message).join(type(exception))
+
     @filter_hook
     def get_list_queryset(self):
         """
@@ -216,6 +224,55 @@ class ListAdminView(ModelAdminView):
         """
         # First, get queryset from base class.
         queryset = self.queryset()
+
+        #Ejemplazo de mensaje dinámico
+        #msg = _(          'The %(name)s "%(obj)s" was added successfully.') % {'name': force_unicode(self.opts.verbose_name), 'obj': "<a class='alert-link' href='%s'>%s</a>" % (self.model_admin_url('change', self.new_obj._get_pk_val()), force_unicode(self.new_obj))}
+        
+        #eSgISO Securty Block
+        #Apply the security filters        
+        filters = {}
+        
+        
+
+        if not self.user.is_superuser:
+            from django.db import connection
+            if hasattr(queryset.model, 'empresa'):
+                try: #Usamos try porque puede que acceder al objecto empresa_erp, por ejemplo, casque.
+                    if self.user.es_cliente(): #hacer un manager sencillito en la clase del user que busque, o bien boolean fields que se coloquen al crear.
+                        filters['empresa'] = self.user.cliente.proyecto.empresa_erp
+                    if self.user.es_empleado():
+                        filters['empresa'] = self.user.empleado.proyectos.empresa_erp
+                except Exception as e:                    
+                    queryset = queryset.none()
+                    connection._rollback() #intentar quitar este rollback, no se porque sale. Debe ser el queryset none a lo mejor porque entemos en medio de una transact?????
+                    self.message_user( _("Necesita estar asignado a una empresa para poder acceder a este listado."), 'error')
+                    #return self.not_allowed_redirect() ______ Pendiente de mejorar hacer el response desde aqui para poner el permission denied.
+            if hasattr(queryset.model, 'user'):
+                try:
+                    filters['user'] = self.user
+                except Exception as e:                    
+                    queryset = queryset.none()
+                    connection._rollback()
+                    self.message_user( _("Necesita ser un usuario para poder acceder a este listado. "), 'error')
+                    #return self.not_allowed_redirect()
+            if hasattr(queryset.model, 'proyecto'):         
+                try:
+                    if self.user.es_cliente():
+                        filters['proyecto'] = self.user.cliente.proyecto
+                    if self.user.es_empleado():
+                        self#filters['proyecto'] = self.user.empleado.proyectos
+                except Exception as e:                    
+                    queryset = queryset.none()
+                    connection._rollback()
+                    self.message_user( _("Necesita estar asignado a un proyecto para poder acceder a este listado"), 'error')
+                    #return self.not_allowed_redirect()
+        #Si hay campo empresa, usuario o proyecto por el que filtrar y el user no lo provee, vaciamos el qs.
+        #PENDIENTE!!!!
+        #Quizá habría que redirigir a html permission denied e indicar (no tiene un proyecto existente luego no puede ver esta entidad.)
+
+        queryset = queryset.filter(**filters)
+        #eSgISO Securty Block END
+        
 
         # Use select_related() if one of the list_display options is a field
         # with a relationship and the provided queryset doesn't already have

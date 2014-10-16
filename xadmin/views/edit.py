@@ -18,6 +18,8 @@ from xadmin.views.detail import DetailAdminUtil
 
 from base import ModelAdminView, filter_hook, csrf_protect_m
 
+from smart_selects.db_fields import ChainedForeignKey
+
 
 FORMFIELD_FOR_DBFIELD_DEFAULTS = {
     models.DateTimeField: {
@@ -35,6 +37,7 @@ FORMFIELD_FOR_DBFIELD_DEFAULTS = {
     models.ImageField: {'widget': widgets.AdminFileWidget},
     models.FileField: {'widget': widgets.AdminFileWidget},
     models.ForeignKey: {'widget': widgets.AdminSelectWidget},
+    ChainedForeignKey: {'widget': widgets.AdminChainedSelectWidget}, #added smart_selects functionality
     models.OneToOneField: {'widget': widgets.AdminSelectWidget},
     models.ManyToManyField: {'widget': widgets.AdminSelectMultiple},
 }
@@ -143,6 +146,7 @@ class ModelFormAdminView(ModelAdminView):
         helper = self.get_form_helper()
         if helper:
             self.form_obj.helper = helper
+        self.aplicar_seguridad_por_proyecto()
 
     @filter_hook
     def valid_forms(self):
@@ -241,12 +245,26 @@ class ModelFormAdminView(ModelAdminView):
     def save_related(self):
         self.form_obj.save_m2m()
 
+    @filter_hook
+    def aplicar_seguridad_por_proyecto(self):
+        #eSgISO hack for proyecto in foreignkey fields
+        if not self.user.is_superuser: #and self.request.user.get_proyecto(): (hacrea algo aqui para bool)
+            for key in self.form_obj.fields:            
+                try: #try porque igual algunos fields no tiene queryset porque no son foreigkey. Mejorarlo.
+                    #self.form_obj[key].queryset = self.form_obj[key].queryset.filter(proyecto = self.request.user.get_proyecto())
+                    self.form_obj.fields[key].queryset = self.form_obj.fields[key].queryset.filter(proyecto = self.request.user.get_proyecto())
+                    #.values()[idx]
+                except:
+                    pass
+        #self.form_obj.fields['clienteproveedor'].queryset = self.form_obj.fields['clienteproveedor'].queryset.filter(proyecto=self.request.user.cliente.proyecto)
+        #Orig that worked: self.form_obj.fields['clienteproveedor'].queryset = self.form_obj.fields['clienteproveedor'].queryset.filter(proyecto=self.request.user.cliente.proyecto)
+        #eSgISO hack for proyecto in foreignkey fields
+
     @csrf_protect_m
     @filter_hook
     def get(self, request, *args, **kwargs):
         self.instance_forms()
-        self.setup_forms()
-
+        self.setup_forms()        
         return self.get_response()
 
     @csrf_protect_m
@@ -255,7 +273,6 @@ class ModelFormAdminView(ModelAdminView):
     def post(self, request, *args, **kwargs):
         self.instance_forms()
         self.setup_forms()
-
         if self.valid_forms():
             self.save_forms()
             self.save_models()
@@ -328,8 +345,8 @@ class ModelFormAdminView(ModelAdminView):
 
 
 class CreateAdminView(ModelFormAdminView):
-
-    def init_request(self, *args, **kwargs):
+    
+    def init_request(self, *args, **kwargs):        
         self.org_obj = None
 
         if not self.has_add_permission():
