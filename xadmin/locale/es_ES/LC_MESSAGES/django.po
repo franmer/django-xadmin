@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: xadmin-core\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-01-10 10:31+0800\n"
-"PO-Revision-Date: 2014-10-07 01:38+0100\n"
+"PO-Revision-Date: 2014-10-18 16:07+0100\n"
 "Last-Translator: sacrac <crocha09.09@gmail.com>\n"
 "Language-Team: Spanish (Espanya) (http://www.transifex.com/projects/p/xadmin/"
 "language/es_ES/)\n"
@@ -426,7 +426,7 @@ msgstr "¿Olvidó su contraseña o nombre de usuario?"
 #: plugins/quickform.py:77
 #, python-format
 msgid "Create New %s"
-msgstr ""
+msgstr "Alta de %s"
 
 #: plugins/relate.py:73
 msgid "Related Objects"

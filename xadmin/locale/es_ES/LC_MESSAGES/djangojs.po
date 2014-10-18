@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: xadmin-core\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-04-30 23:11+0800\n"
-"PO-Revision-Date: 2014-10-17 17:14+0100\n"
+"PO-Revision-Date: 2014-10-17 17:48+0100\n"
 "Last-Translator: sacrac <crocha09.09@gmail.com>\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/projects/p/xadmin/"
 "language/es_MX/)\n"
@@ -37,15 +37,15 @@ msgstr "Nuevo elemento"
 
 #: static/xadmin/js/xadmin.widget.datetime.js:32
 msgid "Sunday Monday Tuesday Wednesday Thursday Friday Saturday Sunday"
-msgstr "Lunes Martes Miércoles Jueves Viernes Sábado Domingo Lunes"
+msgstr "Domingo Lunes Martes Miércoles Jueves Viernes Sábado Domingo"
 
 #: static/xadmin/js/xadmin.widget.datetime.js:33
 msgid "Sun Mon Tue Wed Thu Fri Sat Sun"
-msgstr "Lun Mar Mié Jue Vie Sáb Dom Lun"
+msgstr "Dom Lun Mar Mié Jue Vie Sáb Dom"
 
 #: static/xadmin/js/xadmin.widget.datetime.js:34
 msgid "Su Mo Tu We Th Fr Sa Su"
-msgstr "Lu Ma Mi Ju Vi Sá Do Lu"
+msgstr "Do Lu Ma Mi Ju Vi Sá Do"
 
 #: static/xadmin/js/xadmin.widget.datetime.js:35
 msgid ""
