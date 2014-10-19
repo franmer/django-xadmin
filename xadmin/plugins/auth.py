@@ -176,7 +176,7 @@ class ProyectoFieldPlugin(BaseAdminPlugin):
                 if hasattr(datas['data'],'_mutable') and not datas['data']._mutable:
                     datas['data'] = datas['data'].copy()
                 for f in self.proyecto_fields:
-                    datas['data'][f] = self.user.cliente.get_proyecto().pk
+                    datas['data'][f] = self.user.get_proyecto().pk
                     #http://stackoverflow.com/questions/929029/how-do-i-access-the-child-classes-of-an-object-in-django-without-knowing-the-nam
                     #https://github.com/chrisglass/django_polymorphic
         return datas
