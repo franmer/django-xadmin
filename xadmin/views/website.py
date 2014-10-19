@@ -13,7 +13,7 @@ from xadmin.layout import FormHelper
 
 
 class IndexView(Dashboard):
-    title = _("Main Dashboard")
+    title = _("Inicio")
     icon = "fa fa-dashboard"
 
     def get_page_id(self):

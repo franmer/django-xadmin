@@ -201,7 +201,7 @@ class ModelFormAdminView(ModelAdminView):
 
             rendered_fields = [i[1] for i in layout.get_field_names()]
             container = layout[0].fields
-            other_fieldset = Fieldset(_(u'Other Fields'), *[f for f in fields if f not in rendered_fields])
+            other_fieldset = Fieldset(_(u'Other Fields'), *[f for f in fields if f not in rendered_fields], css_class='other-fields')
 
             if len(other_fieldset.fields):
                 if len(container) and isinstance(container[0], Column):
