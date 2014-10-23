@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: xadmin-core\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-01-10 10:31+0800\n"
-"PO-Revision-Date: 2014-10-18 16:07+0100\n"
+"PO-Revision-Date: 2014-10-23 22:25+0100\n"
 "Last-Translator: sacrac <crocha09.09@gmail.com>\n"
 "Language-Team: Spanish (Espanya) (http://www.transifex.com/projects/p/xadmin/"
 "language/es_ES/)\n"
@@ -779,7 +779,7 @@ msgstr "Nuevo marcador"
 
 #: templates/xadmin/blocks/model_list.nav_menu.bookmarks.html:26
 msgid "Save current page as Bookmark"
-msgstr "Guardar actual pagino como Marcador"
+msgstr "Guardar actual filtro como Marcador"
 
 #: templates/xadmin/blocks/model_list.nav_menu.bookmarks.html:32
 msgid "Enter bookmark title"
