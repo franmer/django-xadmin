@@ -238,10 +238,10 @@ class ListAdminView(ModelAdminView):
             from django.db import connection
             if hasattr(queryset.model, 'empresa'):
                 try: #Usamos try porque puede que acceder al objecto empresa_erp, por ejemplo, casque.
-                    if self.user.es_cliente(): #hacer un manager sencillito en la clase del user que busque, o bien boolean fields que se coloquen al crear.
-                        filters['empresa'] = self.user.cliente.proyecto.empresa_erp
-                    if self.user.es_empleado():
-                        filters['empresa'] = self.user.empleado.proyectos.empresa_erp
+                    #if self.user.es_cliente(): #hacer un manager sencillito en la clase del user que busque, o bien boolean fields que se coloquen al crear.
+                    filters['empresa'] = self.user.get_proyecto().empresa_erp
+                    #if self.user.es_empleado():
+                    #filters['empresa'] = self.user.get_proyecto().empresa_erp
                 except Exception as e:                    
                     queryset = queryset.none()
                     connection._rollback() #intentar quitar este rollback, no se porque sale. Debe ser el queryset none a lo mejor porque entemos en medio de una transact?????
@@ -257,10 +257,10 @@ class ListAdminView(ModelAdminView):
                     #return self.not_allowed_redirect()
             if hasattr(queryset.model, 'proyecto'):         
                 try:
-                    if self.user.es_cliente():
-                        filters['proyecto'] = self.user.cliente.proyecto
-                    if self.user.es_empleado():
-                        self#filters['proyecto'] = self.user.empleado.proyectos
+                    #if self.user.es_cliente():
+                    filters['proyecto'] = self.user.get_proyecto()
+                    #if self.user.es_empleado():
+                    #self#filters['proyecto'] = self.user.empleado.proyectos
                 except Exception as e:                    
                     queryset = queryset.none()
                     connection._rollback()
